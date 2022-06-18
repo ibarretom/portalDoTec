@@ -6,6 +6,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { EnterLoginPage } from "../views/EnterLoginPage";
 import { LoginPage } from "../views/LoginPage";
 import { HomePage } from "../views/HomePage";
+import { FinalizarOSPage } from "../views/FinalizarOSPage";
+import { ReportPage } from "../views/ReportPage";
 
 const Stack = createNativeStackNavigator();
 
@@ -15,9 +17,11 @@ export function Router() {
       <Stack.Navigator
         screenOptions={{ animation: "none", headerShown: false }}
       >
+        <Stack.Screen name="EnterLoginPage" component={EnterLoginPage} />
         <Stack.Screen name="LoginPage" component={LoginPage} />
-        {/* <Stack.Screen name="LoginPage" component={LoginPage} /> */}
-        {/* <Stack.Screen name="HomePage" component={HomePage} /> */}
+        <Stack.Screen name="HomePage" component={HomePage} />
+        <Stack.Screen name="FinalizarOSPage" component={FinalizarOSPage} />
+        <Stack.Screen name="ReportPage" component={ReportPage} />
       </Stack.Navigator>
     </NavigationContainer>
   );

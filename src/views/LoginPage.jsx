@@ -1,11 +1,9 @@
 import React from "react";
 import { StyleSheet, View, Text, Pressable, Alert } from "react-native";
 
-import Icon from "react-native-vector-icons/MaterialIcons";
-import Reapple from "react-native-material-ripple";
-
 import { InputComponent } from "../components/InputComponent";
 import { PrimaryButton } from "../components/buttons/PrimaryButton";
+import { TabBar } from "../components/TabBar";
 
 export function LoginPage({ navigation }) {
   function goToEnterLogin() {
@@ -18,11 +16,7 @@ export function LoginPage({ navigation }) {
 
   return (
     <>
-      <View style={styles.tabBar}>
-        <Reapple onPress={() => goToEnterLogin()}>
-          <Icon size={24} name={"arrow-back"} color="#000" />
-        </Reapple>
-      </View>
+      <TabBar onClickBack={() => goToEnterLogin()}/>
       <View style={styles.main}>
         <Text style={styles.welcomeText}>Olá, seja bem-vindo!</Text>
         <Text style={styles.instructionText}>
@@ -43,14 +37,7 @@ const styles = StyleSheet.create({
   main: {
     flex: 1,
     paddingHorizontal: 16,
-  },
-  tabBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    height: 52,
-    borderBottomWidth: 1,
-    borderColor: "#D6D6D6",
+    backgroundColor: "white"
   },
   welcomeText: {
     fontSize: 24,

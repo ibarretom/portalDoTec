@@ -5,28 +5,39 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 
 import { TwoColumnWithHeadersTable } from "../components/TwoColumnWithHeadersTable";
 import { OneColumnTable } from "../components/OneColumnTable";
+import { TabBar } from "../components/TabBar";
 
-
-export function ReportPage() {
+export function ReportPage({ navigation }) {
+  function goToHomePage() {
+    navigation.navigate("HomePage");
+  }
   return (
-    <ScrollView style={styles.main}>
-      <Text style={styles.mainText}>Relatório de materiais</Text>
-      
-      <View>
-        <TextInput style={styles.input} placeholder={"15/06/2022"} />
-        <Icon style={styles.calendarIcon} size={32} name={"calendar-today"} color="#999" />
-      </View>
-      
-      <Text style={styles.secondaryText}>Utilizados</Text>
+    <>
+      <TabBar onClickBack={() => goToHomePage()} />
+      <ScrollView style={styles.main}>
+        <Text style={styles.mainText}>Relatório de materiais</Text>
 
-      <TwoColumnWithHeadersTable />
-      
-      <OneColumnTable />
-      
-      <Text style={styles.secondaryText}>Retirados</Text>
-      
-      <OneColumnTable />
-    </ScrollView>
+        <View>
+          <TextInput style={styles.input} placeholder={"15/06/2022"} />
+          <Icon
+            style={styles.calendarIcon}
+            size={32}
+            name={"calendar-today"}
+            color="#999"
+          />
+        </View>
+
+        <Text style={styles.secondaryText}>Utilizados</Text>
+
+        <TwoColumnWithHeadersTable />
+
+        <OneColumnTable />
+
+        <Text style={styles.secondaryText}>Retirados</Text>
+
+        <OneColumnTable />
+      </ScrollView>
+    </>
   );
 }
 
@@ -34,12 +45,13 @@ const styles = StyleSheet.create({
   main: {
     flex: 1,
     paddingHorizontal: 16,
+    backgroundColor: "#fff",
   },
   mainText: {
     fontSize: 24,
     fontWeight: "bold",
-    marginTop: 68,
-    marginBottom: 16
+    marginTop: 16,
+    marginBottom: 16,
   },
   input: {
     height: 40,
@@ -52,11 +64,11 @@ const styles = StyleSheet.create({
   calendarIcon: {
     position: "absolute",
     right: 8,
-    top: 4
+    top: 4,
   },
   secondaryText: {
     fontSize: 18,
     fontWeight: "bold",
-    marginTop: 16
-  }
+    marginTop: 16,
+  },
 });

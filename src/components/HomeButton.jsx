@@ -1,13 +1,14 @@
 import React from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons"
+import Reapple from "react-native-material-ripple";
 
-export function HomeButton({name, iconName}) {
+export function HomeButton({name, iconName, onPress}) {
   return (
-    <View style={styles.mainContainer}>
+    <Reapple style={styles.mainContainer} onPress={onPress}>
       <Icon size={42} name={iconName} color="#999" />
       <Text style={styles.text}>{name}</Text>
-    </View>
+    </Reapple>
   );
 }
 

@@ -7,13 +7,21 @@ import { TextGradient } from "../components/TextGradient";
 import { HomeButton } from "../components/HomeButton";
 import { OSCard } from "../components/OSCard";
 
-export function HomePage() {
+export function HomePage({ navigation }) {
+  function goTo({page}) {
+    navigation.navigate(page);
+  }
+  
   return (
     <ScrollView style={styles.main}>
-      <TextGradient text={"Bem-vindo ao Portal do Técnico"}/>
+      <TextGradient text={"Bem-vindo ao Portal do Técnico"} />
       <View style={styles.buttonsContainer}>
-        <HomeButton name={"Finalizar OS"} iconName={"description"} />
-        <HomeButton name={"Relatório de Materiais"} iconName={"assignment"} />
+        <HomeButton
+          name={"Finalizar OS"}
+          iconName={"description"}
+          onPress={() => goTo({page: "FinalizarOSPage"})}
+        />
+        <HomeButton name={"Relatório de Materiais"} iconName={"assignment"} onPress={() => goTo({page: "ReportPage"})}/>
       </View>
       <Text style={styles.OSText}>OS's finalizadas</Text>
       <View>
@@ -37,6 +45,7 @@ const styles = StyleSheet.create({
     paddingRight: 16,
     paddingLeft: 16,
     paddingBottom: 16,
+    backgroundColor: "#fff",
   },
   buttonsContainer: {
     flexDirection: "row",
