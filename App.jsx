@@ -1,11 +1,11 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet, StatusBar, Platform, Text } from 'react-native';
 
-import { HomePage } from './src/views/HomePage';
+import { Router } from './src/routes/Router';
 export default function App() {
   return (
     <SafeAreaView style={styles.container}>
-      <HomePage />
+      <Router />
     </SafeAreaView>
   );
 }

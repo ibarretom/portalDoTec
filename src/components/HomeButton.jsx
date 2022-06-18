@@ -4,7 +4,7 @@ import Icon from "react-native-vector-icons/MaterialIcons"
 
 export function HomeButton({name, iconName}) {
   return (
-    <View style={styles.container}>
+    <View style={styles.mainContainer}>
       <Icon size={42} name={iconName} color="#999" />
       <Text style={styles.text}>{name}</Text>
     </View>
@@ -12,7 +12,7 @@ export function HomeButton({name, iconName}) {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",

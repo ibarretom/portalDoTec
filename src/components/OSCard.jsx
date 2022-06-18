@@ -4,7 +4,7 @@ import { TwoColumnTable } from "./TwoColumnTable";
 
 export function OSCard() {
   return (
-    <View style={styles.container}>
+    <View style={styles.mainContainer}>
       <View style={styles.headlines}>
         <View style={styles.headlinesInfo}>
           <Text style={styles.OSText}>OS: 12345654</Text>
@@ -40,7 +40,7 @@ export function OSCard() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
     padding: 12,
     backgroundColor: "#F2F2F2",
     borderRadius: 8,
