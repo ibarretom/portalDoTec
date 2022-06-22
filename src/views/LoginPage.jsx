@@ -18,7 +18,6 @@ export function LoginPage({ navigation }) {
   }
 
   function doLogIn({email, password}) {
-    console.warn(email, password)
     signIn({email, password})
   }
 
