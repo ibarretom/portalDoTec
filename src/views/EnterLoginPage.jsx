@@ -55,9 +55,10 @@ export function EnterLoginPage({ navigation }) {
           <PrimaryButton
             onPress={() => goToLoginPage()}
             size={"md"}
-            text={"Entrar"}
             color={"#000"}
-          />
+          >
+            Acessar Portal
+          </PrimaryButton>
         </View>
       </View>
     </LinearGradient>

@@ -9,19 +9,29 @@ import { HomePage } from "../views/HomePage";
 import { FinalizarOSPage } from "../views/FinalizarOSPage";
 import { ReportPage } from "../views/ReportPage";
 
+import { useAuth } from "../hooks/useAuth";
+
 const Stack = createNativeStackNavigator();
 
 export function Router() {
+  const { isLogIn } = useAuth();
   return (
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{ animation: "none", headerShown: false }}
       >
-        <Stack.Screen name="EnterLoginPage" component={EnterLoginPage} />
-        <Stack.Screen name="LoginPage" component={LoginPage} />
-        <Stack.Screen name="HomePage" component={HomePage} />
-        <Stack.Screen name="FinalizarOSPage" component={FinalizarOSPage} />
-        <Stack.Screen name="ReportPage" component={ReportPage} />
+        {!isLogIn ? (
+          <>
+            <Stack.Screen name="EnterLoginPage" component={EnterLoginPage} />
+            <Stack.Screen name="LoginPage" component={LoginPage} />
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="HomePage" component={HomePage} />
+            <Stack.Screen name="FinalizarOSPage" component={FinalizarOSPage} />
+            <Stack.Screen name="ReportPage" component={ReportPage} />
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

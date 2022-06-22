@@ -3,7 +3,7 @@ import { Text, StyleSheet } from "react-native";
 import Reapple from "react-native-material-ripple";
 
 export function PrimaryButton({
-  text,
+  children,
   size = "sm",
   mb = 8,
   color = "#1976D2",
@@ -17,7 +17,7 @@ export function PrimaryButton({
       ]}
       onPress={onPress}
     >
-      <Text style={size == "md" ? styles.md : styles.sm}>{text}</Text>
+      <Text style={size == "md" ? styles.md : styles.sm}>{children}</Text>
     </Reapple>
   );
 }

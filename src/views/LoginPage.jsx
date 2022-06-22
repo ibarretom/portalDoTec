@@ -1,22 +1,30 @@
-import React from "react";
-import { StyleSheet, View, Text, Pressable, Alert } from "react-native";
+import { useState } from "react";
+import {
+  StyleSheet,
+  View,
+  Text
+} from "react-native";
 
-import { InputComponent } from "../components/InputComponent";
-import { PrimaryButton } from "../components/buttons/PrimaryButton";
 import { TabBar } from "../components/TabBar";
 
+import { useAuth } from "../hooks/useAuth";
+import { LoginForm } from "../components/form/LoginForm";
+
 export function LoginPage({ navigation }) {
+  const {signIn} = useAuth()
+
   function goToEnterLogin() {
-    navigation.navigate("EnterLoginPage");
+    navigation.goBack();
   }
 
-  function goToHomePage() {
-    navigation.navigate("HomePage")
+  function doLogIn({email, password}) {
+    console.warn(email, password)
+    signIn({email, password})
   }
 
   return (
     <>
-      <TabBar onClickBack={() => goToEnterLogin()}/>
+      <TabBar onClickBack={() => goToEnterLogin()} />
       <View style={styles.main}>
         <Text style={styles.welcomeText}>Olá, seja bem-vindo!</Text>
         <Text style={styles.instructionText}>
@@ -24,9 +32,7 @@ export function LoginPage({ navigation }) {
           portal
         </Text>
         <View style={styles.inputContainer}>
-          <InputComponent label={"Login"} placeholder={"Digite o login"} />
-          <InputComponent label={"Senha"} placeholder={"Insira a senha"} />
-          <PrimaryButton text="Entrar" styles={styles.button} size={"md"} onPress={goToHomePage} />
+          <LoginForm onPressEnter={doLogIn}/>
         </View>
       </View>
     </>
@@ -37,7 +43,7 @@ const styles = StyleSheet.create({
   main: {
     flex: 1,
     paddingHorizontal: 16,
-    backgroundColor: "white"
+    backgroundColor: "white",
   },
   welcomeText: {
     fontSize: 24,
@@ -50,8 +56,5 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: "100%",
     marginTop: 24,
-  },
-  button: {
-    borderRadius: 16,
   },
 });

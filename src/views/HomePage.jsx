@@ -3,7 +3,7 @@ import { StyleSheet, Text, TextInput, View, ScrollView } from "react-native";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
 
-import { TextGradient } from "../components/TextGradient";
+// import { TextGradient } from "../components/TextGradient";
 import { HomeButton } from "../components/HomeButton";
 import { OSCard } from "../components/OSCard";
 
@@ -14,7 +14,7 @@ export function HomePage({ navigation }) {
   
   return (
     <ScrollView style={styles.main}>
-      <TextGradient text={"Bem-vindo ao Portal do Técnico"} />
+      {/* <TextGradient text={"Bem-vindo ao Portal do Técnico"} /> */}
       <View style={styles.buttonsContainer}>
         <HomeButton
           name={"Finalizar OS"}
