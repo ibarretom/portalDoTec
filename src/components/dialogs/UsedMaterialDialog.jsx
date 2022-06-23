@@ -1,19 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, StyleSheet, Text, TextInput } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Reapple from "react-native-material-ripple";
-import { PrimaryButton } from "./buttons/PrimaryButton";
-import { SecondaryButton } from "./buttons/SecondaryButton";
+import { PrimaryButton } from "../buttons/PrimaryButton";
+import { SecondaryButton } from "../buttons/SecondaryButton";
 
-export function UsedMaterialDialog({ edit, inserMaterial, pushMaterial, modalDialog, handleModalDialog }) {
+export function UsedMaterialDialog({
+  edit,
+  insertMaterial,
+  pushMaterial,
+  modalDialog,
+  handleModalDialog,
+}) {
   const [material, setMaterial] = useState(
-    inserMaterial
-      ? inserMaterial
+    insertMaterial
+      ? insertMaterial
       : {
           name: "",
           amount: "0",
         }
   );
+
+  useEffect(() => {
+    setMaterial(insertMaterial);
+  }, [insertMaterial]);
 
   function addMaterial() {
     let amount = parseInt(material.amount);
@@ -26,6 +36,15 @@ export function UsedMaterialDialog({ edit, inserMaterial, pushMaterial, modalDia
     amount = amount - 1;
 
     setMaterial({ ...material, amount: amount.toString() });
+  }
+
+  function handleAddMaterial() {
+    if (parseInt(material.amount) > 1) {
+      pushMaterial(material);
+      return
+    }
+
+    console.warn("quantidade de materiais deve ser maior que 1")
   }
   return (
     <View style={modalDialog ? styles.dialog : styles.dialogClosed}>
@@ -40,7 +59,10 @@ export function UsedMaterialDialog({ edit, inserMaterial, pushMaterial, modalDia
             </View>
 
             <View>
-              <Reapple style={styles.cardIcon} onPress={() => handleModalDialog(false)}>
+              <Reapple
+                style={styles.cardIcon}
+                onPress={() => handleModalDialog(false)}
+              >
                 <Icon size={36} name={"close"} color="#000" />
               </Reapple>
             </View>
@@ -76,7 +98,7 @@ export function UsedMaterialDialog({ edit, inserMaterial, pushMaterial, modalDia
           </View>
 
           <View style={styles.actionButton}>
-            <PrimaryButton onPress={() => pushMaterial(material)}>
+            <PrimaryButton onPress={() => handleAddMaterial()}>
               Adicionar
             </PrimaryButton>
             {edit && <SecondaryButton>Remover</SecondaryButton>}
