@@ -39,7 +39,7 @@ export function UsedMaterialDialog({
   }
 
   function handleAddMaterial() {
-    if (parseInt(material.amount) > 1) {
+    if (parseInt(material.amount) > 0) {
       pushMaterial(material);
       return
     }
