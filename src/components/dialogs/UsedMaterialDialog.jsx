@@ -33,7 +33,9 @@ export function UsedMaterialDialog({
 
   function removeMaterial() {
     let amount = parseInt(material.amount);
-    amount = amount - 1;
+    if(amount > 0) {
+      amount = amount - 1;
+    }
 
     setMaterial({ ...material, amount: amount.toString() });
   }
