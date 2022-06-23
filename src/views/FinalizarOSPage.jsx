@@ -81,7 +81,7 @@ export function FinalizarOSPage({ navigation }) {
             />
           </View>
           <PrimaryButton onPress={() => setModalDialog(true)}>
-            Inserir {modalDialog.toString()}
+            Inserir
           </PrimaryButton>
         </View>
 
