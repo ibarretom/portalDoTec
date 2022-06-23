@@ -6,11 +6,12 @@ import { PrimaryButton } from "../buttons/PrimaryButton";
 import { SecondaryButton } from "../buttons/SecondaryButton";
 
 export function UsedMaterialDialog({
-  edit,
+  edit = false,
   insertMaterial,
   pushMaterial,
   modalDialog,
   handleModalDialog,
+  handleRemoveMaterial,
 }) {
   const [material, setMaterial] = useState(
     insertMaterial
@@ -23,7 +24,7 @@ export function UsedMaterialDialog({
 
   useEffect(() => {
     setMaterial(insertMaterial);
-  }, [insertMaterial]);
+  }, [insertMaterial, edit]);
 
   function addMaterial() {
     let amount = parseInt(material.amount);
@@ -33,7 +34,7 @@ export function UsedMaterialDialog({
 
   function removeMaterial() {
     let amount = parseInt(material.amount);
-    if(amount > 0) {
+    if (amount > 0) {
       amount = amount - 1;
     }
 
@@ -43,10 +44,13 @@ export function UsedMaterialDialog({
   function handleAddMaterial() {
     if (parseInt(material.amount) > 0) {
       pushMaterial(material);
-      return
+      return;
     }
 
-    console.warn("quantidade de materiais deve ser maior que 1")
+    console.warn("quantidade de materiais deve ser maior que 1");
+  }
+  function handleRemoveButton(id) {
+    handleRemoveMaterial(id);
   }
   return (
     <View style={modalDialog ? styles.dialog : styles.dialogClosed}>
@@ -85,7 +89,7 @@ export function UsedMaterialDialog({
               <TextInput
                 style={styles.materialInput}
                 onChangeText={(text) =>
-                  setMaterial({ ...material, amount: text })
+                  setMaterial({ ...material, amount: text.trim() })
                 }
                 value={material.amount}
                 keyboardType="numeric"
@@ -103,7 +107,12 @@ export function UsedMaterialDialog({
             <PrimaryButton onPress={() => handleAddMaterial()}>
               Adicionar
             </PrimaryButton>
-            {edit && <SecondaryButton>Remover</SecondaryButton>}
+
+            {edit && (
+              <SecondaryButton onPress={() => handleRemoveButton(material.id)}>
+                Remover
+              </SecondaryButton>
+            )}
           </View>
         </View>
       </View>
