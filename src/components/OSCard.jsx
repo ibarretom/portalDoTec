@@ -1,10 +1,13 @@
 import React from "react";
+
 import { StyleSheet, View, Text } from "react-native";
 import { TwoColumnTable } from "./TwoColumnTable";
 
+import Reapple from "react-native-material-ripple";
+
 export function OSCard() {
   return (
-    <View style={styles.mainContainer}>
+    <Reapple style={styles.mainContainer}>
       <View style={styles.headlines}>
         <View style={styles.headlinesInfo}>
           <Text style={styles.OSText}>OS: 12345654</Text>
@@ -35,7 +38,7 @@ export function OSCard() {
         <Text>Materiais</Text>
         <TwoColumnTable />
       </View>
-    </View>
+    </Reapple>
   );
 }
 
@@ -45,6 +48,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F2F2F2",
     borderRadius: 8,
     marginTop: 16,
+    minHeight: 320
   },
   headlines: {
     flexDirection: "row",
