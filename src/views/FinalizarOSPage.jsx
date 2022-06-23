@@ -9,7 +9,6 @@ import { TabBar } from "../components/TabBar";
 import { TwoColumnTable } from "../components/TwoColumnTable";
 import { UsedMaterialDialog } from "../components/dialogs/UsedMaterialDialog";
 import { ListMaterialDialog } from "../components/dialogs/ListMaterialDialog";
-import { MaterialList } from "../components/lists/MaterailList";
 
 export function FinalizarOSPage({ navigation }) {
   const [modalUseMaterialDialog, setModalUseMaterialDialog] = useState(false);
@@ -20,8 +19,9 @@ export function FinalizarOSPage({ navigation }) {
   const [IRDRetirado, setIRDRetirado] = useState("");
   const [IRDHabilitado, setIRDHabilitado] = useState("");
   const [material, setMaterial] = useState({});
+  const [editMaterial, setEditMaterial] = useState({});
   const [ordemDeServico, setOS] = useState({
-    // id_tec: "",
+    id_tec: "",
     numeroOS: "",
     numeroDaConta: "",
     kilometragem: "",
@@ -29,7 +29,7 @@ export function FinalizarOSPage({ navigation }) {
     IRDsRetirados: [],
     observacao: "",
     materiais: [],
-    // data_finalizacao: ""
+    data_finalizacao: "",
   });
 
   function goToHomePage() {
@@ -105,16 +105,45 @@ export function FinalizarOSPage({ navigation }) {
   }
 
   function handleCloseSelectMaterialDialog(status) {
-    setMaterial({ id: 0, material: "", amount: "" });
+    setMaterial({ id: 0, material: "", amount: "", unit: "" });
+    setEditMaterial(false);
     setModalSelectMaterialDialog(status);
   }
 
   function handlePushMaterial(item) {
-    const arrayDeMateriais = ordemDeServico.materiais
-    arrayDeMateriais.push(item)
-    setOS({...ordemDeServico, materiais: arrayDeMateriais})
+    let arrayDeMateriais = ordemDeServico.materiais;
+    if (arrayDeMateriais.filter((mat) => mat.name === item.name)[0]) {
+      arrayDeMateriais = arrayDeMateriais.map((mat) => {
+        if (mat.name == item.name) {
+          mat.amount = item.amount;
+        }
+
+        return mat;
+      });
+    } else {
+      arrayDeMateriais.push(item);
+    }
+
+    setOS({ ...ordemDeServico, materiais: arrayDeMateriais });
+    handleCloseSelectMaterialDialog(false);
+    handleCloseAddMaterialDialog(false);
   }
-  
+
+  function handleEditMaterial(item) {
+    setMaterial(item);
+    setEditMaterial(true);
+    setModalUseMaterialDialog(true);
+  }
+
+  function handleRemoveMaterial(id) {
+    console.warn(id);
+    let arrayDeMateriais = ordemDeServico.materiais.filter(
+      (mat) => mat.id !== id
+    );
+    setOS({ ...ordemDeServico, materiais: arrayDeMateriais });
+    setEditMaterial(false)
+    setModalUseMaterialDialog(false);
+  }
   return (
     <>
       <TabBar onClickBack={() => goToHomePage()} />
@@ -252,12 +281,17 @@ export function FinalizarOSPage({ navigation }) {
 
         <View style={[{ marginVertical: 16 }]}>
           <PrimaryButton
-            color="#4CAF50"
             size="md"
+            color="#4CAF50"
             onPress={() => setModalSelectMaterialDialog(true)}
           >
             Adicionar material
           </PrimaryButton>
+          <TwoColumnTable
+            keys={["name", "amount"]}
+            data={ordemDeServico.materiais}
+            onPressRow={(item) => handleEditMaterial(item)}
+          />
         </View>
 
         <View>
@@ -276,9 +310,11 @@ export function FinalizarOSPage({ navigation }) {
       />
 
       <UsedMaterialDialog
+        edit={editMaterial}
         insertMaterial={material}
         modalDialog={modalUseMaterialDialog}
         pushMaterial={(item) => handlePushMaterial(item)}
+        handleRemoveMaterial={(id) => handleRemoveMaterial(id)}
         handleModalDialog={(status) => handleCloseAddMaterialDialog(status)}
       />
     </>
@@ -339,5 +375,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginVertical: 4,
     backgroundColor: "white",
+    padding: 4
   },
 });

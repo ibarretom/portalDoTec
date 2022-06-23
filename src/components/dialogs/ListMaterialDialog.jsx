@@ -8,29 +8,34 @@ const materials = [
     id: "1",
     name: "Cabo coaxial F-59",
     amount: "0",
+    unit: "m",
   },
   {
     id: "2",
     name: "Conector F-59",
     amount: "0",
+    unit: "un",
   },
-  { id: "3", name: "Conector RG-6", amount: "0" },
+  { id: "3", name: "Conector RG-6", amount: "0", unit: "un" },
   {
     id: "4",
     name: "Chave 3x4",
     amount: "0",
+    unit: "un",
   },
   {
     id: "5",
     name: "Lnbf Duplo",
     amount: "0",
+    unit: "un",
   },
   {
     id: "6",
     name: "Lnbf Simples",
     amount: "0",
+    unit: "un",
   },
-  { id: "7", name: "Amplificador tronco", amount: "0" },
+  { id: "7", name: "Amplificador tronco", amount: "0", unit: "un" },
 ].sort((a, b) => a.name > b.name);
 
 export function ListMaterialDialog({
@@ -38,9 +43,8 @@ export function ListMaterialDialog({
   modalDialog = false,
   handleModalDialog,
 }) {
-
   function handleSelectItem(item) {
-    pushMaterial && pushMaterial(item)
+    pushMaterial && pushMaterial(item);
   }
 
   function renderItem({ item }) {

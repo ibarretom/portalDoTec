@@ -1,28 +1,40 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import Reapple from "react-native-material-ripple";
 
-export function TwoColumnTable() {
+export function TwoColumnTable({ data = [], keys = [], onPressRow }) {
+  function handlePressRow(data) {
+    onPressRow(data);
+  }
   return (
     <View style={styles.table}>
-      {/* <View style={styles.header}>
-        <View style={styles.th}>
-          <Text style={styles.data}>Materiais</Text>
-          <Text style={styles.lastData}>Quantidade</Text>
-        </View>
-      </View> */}
       <View style={styles.body}>
-        <View style={styles.row}>
-          <Text style={styles.data}>Cabo coaxial F-59</Text>
-          <Text style={styles.lastData}>200 m</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.data}>Conector F-59</Text>
-          <Text style={styles.lastData}>2 un</Text>
-        </View>
-        <View style={styles.lastRow}>
-          <Text style={styles.data}>Chave 3x4</Text>
-          <Text style={styles.lastData}>2 un</Text>
-        </View>
+        {data.map((data, i, dataArr) => {
+          if (i + 1 !== dataArr.length) {
+            return (
+              <Reapple
+                style={styles.row}
+                key={i}
+                onPress={() => handlePressRow(data)}
+              >
+                <Text style={styles.data}>{data[keys[0]]}</Text>
+                <Text style={styles.lastData}>{data[keys[1]]}</Text>
+              </Reapple>
+            );
+          }
+          return (
+            <Reapple
+              style={styles.lastRow}
+              key={i}
+              onPress={() => handlePressRow(data)}
+            >
+              <Text style={styles.data}>{data[keys[0]]}</Text>
+              <Text style={styles.lastData}>{data[keys[1]]}</Text>
+              <Text style={styles.lastData}></Text>
+            </Reapple>
+          );
+        })}
       </View>
     </View>
   );
@@ -36,17 +48,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   data: {
-    flex: 1,
+    flex: 6,
     paddingTop: 12,
     paddingBottom: 12,
-    paddingLeft: 8
+    paddingLeft: 8,
   },
   lastData: {
     flex: 1,
     textAlign: "right",
     paddingTop: 12,
     paddingBottom: 12,
-    paddingRight: 8
+    paddingRight: 8,
   },
   row: {
     flexDirection: "row",
@@ -55,5 +67,5 @@ const styles = StyleSheet.create({
   },
   lastRow: {
     flexDirection: "row",
-  }
+  },
 });

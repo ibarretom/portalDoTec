@@ -2,13 +2,14 @@ import React from "react";
 import { Text, StyleSheet } from "react-native";
 import Reapple from "react-native-material-ripple"
 
-export function SecondaryButton({ children, size = "sm", mb = 8 }) {
+export function SecondaryButton({ children, size = "sm", mb = 8, onPress }) {
   return (
     <Reapple
       style={[
         size == "md" ? styles.buttonMd : styles.buttonSm,
         { marginBottom: mb },
       ]}
+      onPress={onPress}
     >
       <Text style={size == "md" ? styles.md : styles.sm}>{children}</Text>
     </Reapple>
