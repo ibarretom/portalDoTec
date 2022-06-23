@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 import { Checkbox } from "react-native-paper";
@@ -7,8 +7,10 @@ import { PrimaryButton } from "../components/buttons/PrimaryButton";
 import { SecondaryButton } from "../components/buttons/SecondaryButton";
 import { TabBar } from "../components/TabBar";
 import { TwoColumnTable } from "../components/TwoColumnTable";
+import { UsedMaterialDialog } from "../components/UsedMaterialDialog";
 
 export function FinalizarOSPage({ navigation }) {
+  const [modalDialog, setModalDialog] = useState(false);
   function goToHomePage() {
     navigation.navigate("HomePage");
   }
@@ -78,7 +80,9 @@ export function FinalizarOSPage({ navigation }) {
               placeholder={"Pesquisar Material"}
             />
           </View>
-          <PrimaryButton text={"Inserir"} />
+          <PrimaryButton onPress={() => setModalDialog(true)}>
+            Inserir {modalDialog.toString()}
+          </PrimaryButton>
         </View>
 
         <TwoColumnTable />
@@ -89,6 +93,10 @@ export function FinalizarOSPage({ navigation }) {
           <SecondaryButton text={"Cancelar"} size="md" />
         </View>
       </ScrollView>
+      <UsedMaterialDialog
+        modalDialog={modalDialog}
+        handleModalDialog={(status) => setModalDialog(status)}
+      />
     </>
   );
 }

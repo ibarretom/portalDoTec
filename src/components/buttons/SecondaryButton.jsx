@@ -2,7 +2,7 @@ import React from "react";
 import { Text, StyleSheet } from "react-native";
 import Reapple from "react-native-material-ripple"
 
-export function SecondaryButton({ text, size = "sm", mb = 8 }) {
+export function SecondaryButton({ children, size = "sm", mb = 8 }) {
   return (
     <Reapple
       style={[
@@ -10,7 +10,7 @@ export function SecondaryButton({ text, size = "sm", mb = 8 }) {
         { marginBottom: mb },
       ]}
     >
-      <Text style={size == "md" ? styles.md : styles.sm}>{text}</Text>
+      <Text style={size == "md" ? styles.md : styles.sm}>{children}</Text>
     </Reapple>
   );
 }
