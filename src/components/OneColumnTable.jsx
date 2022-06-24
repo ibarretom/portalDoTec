@@ -1,18 +1,23 @@
-import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-export function OneColumnTable() {
+import Reapple from "react-native-material-ripple";
+
+export function OneColumnTable({ title, data = [], keys, onPressRow }) {
   return (
     <View style={styles.table}>
       <View style={styles.header}>
         <View style={styles.th}>
-          <Text style={[styles.data, { fontWeight: "600" }]}>IRD</Text>
+          <Text style={[styles.data, { fontWeight: "600" }]}>{title}</Text>
         </View>
       </View>
       <View style={styles.body}>
-        <View style={styles.row}>
-          <Text style={styles.data}>Cabo coaxial F-59</Text>
-        </View>
+        {data.map((data, i) => {
+          return (
+            <Reapple style={styles.row} key={i} onPress={() => onPressRow(data)}>
+              <Text style={styles.data}>{data[keys[0]]}</Text>
+            </Reapple>
+          );
+        })}
       </View>
     </View>
   );

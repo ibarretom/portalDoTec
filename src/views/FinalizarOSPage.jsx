@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
+import { useAuth } from "../hooks/useAuth";
+
 import { Checkbox } from "react-native-paper";
 
 import { PrimaryButton } from "../components/buttons/PrimaryButton";
@@ -9,17 +11,32 @@ import { TabBar } from "../components/TabBar";
 import { TwoColumnTable } from "../components/TwoColumnTable";
 import { UsedMaterialDialog } from "../components/dialogs/UsedMaterialDialog";
 import { ListMaterialDialog } from "../components/dialogs/ListMaterialDialog";
+import { OneColumnTable } from "../components/OneColumnTable";
+import { ConfirmationDialog } from "../components/dialogs/ConfirmationDialog";
 
 export function FinalizarOSPage({ navigation }) {
+  const { user } = useAuth();
+
   const [modalUseMaterialDialog, setModalUseMaterialDialog] = useState(false);
   const [modalSelectMaterialDialog, setModalSelectMaterialDialog] =
     useState(false);
+  const [
+    modalConfimationHabilitadoDialog,
+    setModalConfirmationHabilitadoDialog,
+  ] = useState(false);
+  const [modalConfimationRetiradoDialog, setModalConfirmationRetiradoDialog] =
+    useState(false);
+
   const [habilitouIRD, setHabilitouIRD] = useState("unchecked");
   const [retirouIRD, setRetirouIRD] = useState("unchecked");
+
   const [IRDRetirado, setIRDRetirado] = useState("");
   const [IRDHabilitado, setIRDHabilitado] = useState("");
+  const [IRDTobeExcluded, setIRDTobeExcluded] = useState("");
+
   const [material, setMaterial] = useState({});
   const [editMaterial, setEditMaterial] = useState({});
+
   const [ordemDeServico, setOS] = useState({
     id_tec: "",
     numeroOS: "",
@@ -60,8 +77,12 @@ export function FinalizarOSPage({ navigation }) {
     const arrayOfIRDs = ordemDeServico.IRDsHabilitados;
 
     checkIfIRDCanBeAdd(IRDHabilitado, arrayOfIRDs);
-
-    arrayOfIRDs.push(IRDHabilitado);
+    arrayOfIRDs.push({
+      name: IRDHabilitado,
+      status: "HABILITADO",
+      date: Date.now(),
+      id_tec: user.uid,
+    });
 
     setOS({ ...ordemDeServico, IRDsHabilitados: arrayOfIRDs });
 
@@ -73,7 +94,12 @@ export function FinalizarOSPage({ navigation }) {
 
     checkIfIRDCanBeAdd(IRDRetirado, arrayOfIRDs);
 
-    arrayOfIRDs.push(IRDRetirado);
+    arrayOfIRDs.push({
+      name: IRDRetirado,
+      status: "RETIRADO",
+      date: Date.now(),
+      id_tec: user.uid,
+    });
 
     setOS({ ...ordemDeServico, IRDsRetirados: arrayOfIRDs });
 
@@ -83,11 +109,9 @@ export function FinalizarOSPage({ navigation }) {
   function checkIfIRDCanBeAdd(ird, arrayIRD) {
     const IRDAlreadyAdd = arrayIRD.filter((ird) => ird === ird)[0];
     if (IRDAlreadyAdd) {
-      console.warn("IRD já adicionado");
       return false;
     }
     if (ird.length !== 17) {
-      console.warn("IRD com numero inválido");
       return false;
     }
     return true;
@@ -136,13 +160,50 @@ export function FinalizarOSPage({ navigation }) {
   }
 
   function handleRemoveMaterial(id) {
-    console.warn(id);
     let arrayDeMateriais = ordemDeServico.materiais.filter(
       (mat) => mat.id !== id
     );
     setOS({ ...ordemDeServico, materiais: arrayDeMateriais });
-    setEditMaterial(false)
+    setEditMaterial(false);
     setModalUseMaterialDialog(false);
+  }
+
+  function openModalConfirmateDeleteIRDHabilitado(data) {
+    setIRDTobeExcluded(data);
+    setModalConfirmationHabilitadoDialog(true);
+  }
+
+  function handleConfirmDeleteIRDHabilitado() {
+    let arrayOfIRDs = ordemDeServico.IRDsHabilitados.filter(
+      (ird) => ird.name !== IRDTobeExcluded.name
+    );
+    setOS({ ...ordemDeServico, IRDsHabilitados: arrayOfIRDs });
+    setIRDTobeExcluded("");
+    setModalConfirmationHabilitadoDialog(false);
+  }
+
+  function handleRejectDeleteIRDHabilitado() {
+    setIRDTobeExcluded("");
+    setModalConfirmationHabilitadoDialog(false);
+  }
+
+  function openModalConfirmateDeleteIRDRetirado(data) {
+    setIRDTobeExcluded(data);
+    setModalConfirmationRetiradoDialog(true);
+  }
+
+  function handleConfirmDeleteIRDRetirado() {
+    let arrayOfIRDs = ordemDeServico.IRDsRetirados.filter(
+      (ird) => ird.name !== IRDTobeExcluded.name
+    );
+    setOS({ ...ordemDeServico, IRDsRetirados: arrayOfIRDs });
+    setIRDTobeExcluded("");
+    setModalConfirmationRetiradoDialog(false);
+  }
+
+  function handleRejectDeleteIRDRetirado() {
+    setIRDTobeExcluded("");
+    setModalConfirmationRetiradoDialog(false);
   }
   return (
     <>
@@ -256,6 +317,7 @@ export function FinalizarOSPage({ navigation }) {
                     onChangeText={(text) => setIRDRetirado(text)}
                   />
                 </View>
+
                 <PrimaryButton onPress={() => insertIRDRetirado()}>
                   Inserir
                 </PrimaryButton>
@@ -293,7 +355,28 @@ export function FinalizarOSPage({ navigation }) {
             onPressRow={(item) => handleEditMaterial(item)}
           />
         </View>
-
+        <View style={[{ marginVertical: 4 }]}>
+          {ordemDeServico.IRDsHabilitados.length > 0 && (
+            <OneColumnTable
+              keys={["name"]}
+              title={"IRD Habilitado"}
+              data={ordemDeServico.IRDsHabilitados}
+              onPressRow={(data) =>
+                openModalConfirmateDeleteIRDHabilitado(data)
+              }
+            />
+          )}
+        </View>
+        <View style={[{ marginVertical: 4 }]}>
+          {ordemDeServico.IRDsRetirados.length > 0 && (
+            <OneColumnTable
+              keys={["name"]}
+              title={"IRD Retirado"}
+              data={ordemDeServico.IRDsRetirados}
+              onPressRow={(data) => openModalConfirmateDeleteIRDRetirado(data)}
+            />
+          )}
+        </View>
         <View>
           <PrimaryButton size="md" mb={8}>
             Finalizar OS
@@ -316,6 +399,22 @@ export function FinalizarOSPage({ navigation }) {
         pushMaterial={(item) => handlePushMaterial(item)}
         handleRemoveMaterial={(id) => handleRemoveMaterial(id)}
         handleModalDialog={(status) => handleCloseAddMaterialDialog(status)}
+      />
+
+      <ConfirmationDialog
+        modalDialog={modalConfimationHabilitadoDialog}
+        headerText={"Confirmar exclusão de IRD"}
+        bodyText={"Tem certeza que deseja excluir este IRD?"}
+        handleConfirmationButton={handleConfirmDeleteIRDHabilitado}
+        handleRejectButton={handleRejectDeleteIRDHabilitado}
+      />
+
+      <ConfirmationDialog
+        modalDialog={modalConfimationRetiradoDialog}
+        headerText={"Confirmar exclusão de IRD"}
+        bodyText={"Tem certeza que deseja excluir este IRD?"}
+        handleConfirmationButton={handleConfirmDeleteIRDRetirado}
+        handleRejectButton={handleRejectDeleteIRDRetirado}
       />
     </>
   );
@@ -375,6 +474,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginVertical: 4,
     backgroundColor: "white",
-    padding: 4
+    padding: 4,
   },
 });
