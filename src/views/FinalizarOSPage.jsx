@@ -13,6 +13,7 @@ import { UsedMaterialDialog } from "../components/dialogs/UsedMaterialDialog";
 import { ListMaterialDialog } from "../components/dialogs/ListMaterialDialog";
 import { OneColumnTable } from "../components/OneColumnTable";
 import { ConfirmationDialog } from "../components/dialogs/ConfirmationDialog";
+import { Alert } from "../components/alerts/Alert";
 
 export function FinalizarOSPage({ navigation }) {
   const { user } = useAuth();
@@ -26,6 +27,12 @@ export function FinalizarOSPage({ navigation }) {
   ] = useState(false);
   const [modalConfimationRetiradoDialog, setModalConfirmationRetiradoDialog] =
     useState(false);
+
+  const [alert, setAlert] = useState({
+    modal: false,
+    text: "Ocorreu um erro",
+    backgroundColor: "#ff5252",
+  });
 
   const [habilitouIRD, setHabilitouIRD] = useState("unchecked");
   const [retirouIRD, setRetirouIRD] = useState("unchecked");
@@ -76,7 +83,10 @@ export function FinalizarOSPage({ navigation }) {
   function insertIRDHabilitado() {
     const arrayOfIRDs = ordemDeServico.IRDsHabilitados;
 
-    checkIfIRDCanBeAdd(IRDHabilitado, arrayOfIRDs);
+    const canAdd = checkIfIRDCanBeAdd(IRDHabilitado, arrayOfIRDs);
+
+    if (!canAdd) return;
+
     arrayOfIRDs.push({
       name: IRDHabilitado,
       status: "HABILITADO",
@@ -92,7 +102,9 @@ export function FinalizarOSPage({ navigation }) {
   function insertIRDRetirado() {
     const arrayOfIRDs = ordemDeServico.IRDsRetirados;
 
-    checkIfIRDCanBeAdd(IRDRetirado, arrayOfIRDs);
+    const canAdd = checkIfIRDCanBeAdd(IRDRetirado, arrayOfIRDs);
+
+    if (!canAdd) return;
 
     arrayOfIRDs.push({
       name: IRDRetirado,
@@ -109,9 +121,19 @@ export function FinalizarOSPage({ navigation }) {
   function checkIfIRDCanBeAdd(ird, arrayIRD) {
     const IRDAlreadyAdd = arrayIRD.filter((ird) => ird === ird)[0];
     if (IRDAlreadyAdd) {
+      setAlert({
+        ...alert,
+        modal: true,
+        text: "IRD já adicionado"
+      })
       return false;
     }
     if (ird.length !== 17) {
+      setAlert({
+        ...alert,
+        modal: true,
+        text: "O IRD deve ter 17 caracteres"
+      })
       return false;
     }
     return true;
@@ -205,6 +227,15 @@ export function FinalizarOSPage({ navigation }) {
     setIRDTobeExcluded("");
     setModalConfirmationRetiradoDialog(false);
   }
+
+  function alertTimout(status) {
+    setAlert({
+      modal: false,
+      text: "Ocorreu um erro",
+      backgroundColor: "#ff5252",
+    });
+  }
+
   return (
     <>
       <TabBar onClickBack={() => goToHomePage()} />
@@ -280,8 +311,9 @@ export function FinalizarOSPage({ navigation }) {
               <View style={[styles.inputColumn, { marginRight: 8 }]}>
                 <TextInput
                   style={styles.input}
-                  placeholder="Número do IRD"
                   value={IRDHabilitado}
+                  placeholder="Número do IRD"
+                  autoCapitalize="characters"
                   onChangeText={(text) => setIRDHabilitado(text)}
                 />
               </View>
@@ -311,9 +343,10 @@ export function FinalizarOSPage({ navigation }) {
               <View style={styles.rowInput}>
                 <View style={[styles.inputColumn, { marginRight: 8 }]}>
                   <TextInput
+                    value={IRDRetirado}
                     style={styles.input}
                     placeholder="Número do IRD"
-                    value={IRDRetirado}
+                    autoCapitalize="characters"
                     onChangeText={(text) => setIRDRetirado(text)}
                   />
                 </View>
@@ -416,6 +449,13 @@ export function FinalizarOSPage({ navigation }) {
         handleConfirmationButton={handleConfirmDeleteIRDRetirado}
         handleRejectButton={handleRejectDeleteIRDRetirado}
       />
+      <Alert
+        showAlert={alert.modal}
+        backgroundColor={alert.backgroundColor}
+        handleTimeout={(status) => alertTimout(status)}
+      >
+        {alert.text}
+      </Alert>
     </>
   );
 }
