@@ -14,6 +14,7 @@ import { ListMaterialDialog } from "../components/dialogs/ListMaterialDialog";
 import { OneColumnTable } from "../components/OneColumnTable";
 import { ConfirmationDialog } from "../components/dialogs/ConfirmationDialog";
 import { Alert } from "../components/alerts/Alert";
+import { Scan } from "../components/Scan";
 
 export function FinalizarOSPage({ navigation }) {
   const { user } = useAuth();
@@ -456,6 +457,7 @@ export function FinalizarOSPage({ navigation }) {
       >
         {alert.text}
       </Alert>
+      {/* <Scan /> */}
     </>
   );
 }
