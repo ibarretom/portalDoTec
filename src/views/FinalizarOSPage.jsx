@@ -125,16 +125,16 @@ export function FinalizarOSPage({ navigation }) {
       setAlert({
         ...alert,
         modal: true,
-        text: "IRD já adicionado"
-      })
+        text: "IRD já adicionado",
+      });
       return false;
     }
     if (ird.length !== 17) {
       setAlert({
         ...alert,
         modal: true,
-        text: "O IRD deve ter 17 caracteres"
-      })
+        text: "O IRD deve ter 17 caracteres",
+      });
       return false;
     }
     return true;
@@ -311,6 +311,7 @@ export function FinalizarOSPage({ navigation }) {
             <View style={styles.rowInput}>
               <View style={[styles.inputColumn, { marginRight: 8 }]}>
                 <TextInput
+                  maxLength={17}
                   style={styles.input}
                   value={IRDHabilitado}
                   placeholder="Número do IRD"
@@ -344,6 +345,7 @@ export function FinalizarOSPage({ navigation }) {
               <View style={styles.rowInput}>
                 <View style={[styles.inputColumn, { marginRight: 8 }]}>
                   <TextInput
+                    maxLength={17}
                     value={IRDRetirado}
                     style={styles.input}
                     placeholder="Número do IRD"
@@ -416,7 +418,9 @@ export function FinalizarOSPage({ navigation }) {
             Finalizar OS
           </PrimaryButton>
 
-          <SecondaryButton size="md">Cancelar Preenchimento</SecondaryButton>
+          <SecondaryButton size="md" onPress={() => goToHomePage()}>
+            Cancelar Preenchimento
+          </SecondaryButton>
         </View>
       </ScrollView>
 
