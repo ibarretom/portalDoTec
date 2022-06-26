@@ -15,6 +15,21 @@ import { OneColumnTable } from "../components/OneColumnTable";
 import { ConfirmationDialog } from "../components/dialogs/ConfirmationDialog";
 import { Alert } from "../components/alerts/Alert";
 import { Scan } from "../components/Scan";
+import { addDoc } from "../services/database";
+
+import _ from "lodash";
+
+const emptyOS = {
+  id_tec: "",
+  numeroOS: "",
+  numeroDaConta: "",
+  kilometragem: "",
+  IRDsHabilitados: [],
+  IRDsRetirados: [],
+  observacao: "",
+  materiais: [],
+  data_finalizacao: new Date().toLocaleDateString(),
+};
 
 export function FinalizarOSPage({ navigation }) {
   const { user } = useAuth();
@@ -45,17 +60,9 @@ export function FinalizarOSPage({ navigation }) {
   const [material, setMaterial] = useState({});
   const [editMaterial, setEditMaterial] = useState({});
 
-  const [ordemDeServico, setOS] = useState({
-    id_tec: "",
-    numeroOS: "",
-    numeroDaConta: "",
-    kilometragem: "",
-    IRDsHabilitados: [],
-    IRDsRetirados: [],
-    observacao: "",
-    materiais: [],
-    data_finalizacao: "",
-  });
+  const [ordemDeServico, setOS] = useState(_.cloneDeep(emptyOS));
+
+  const [isLoading, setIsLoading] = useState(false);
 
   function goToHomePage() {
     navigation.goBack();
@@ -237,6 +244,58 @@ export function FinalizarOSPage({ navigation }) {
     });
   }
 
+  async function submitOrdemDeServico() {
+    setIsLoading(true);
+    const canBeSubmited = checkIfFormIsValid();
+    if (!canBeSubmited) {
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const response = await addDoc({
+        docName: "ordensDeServico",
+        docData: { ..._.cloneDeep(ordemDeServico), id_tec: user.uid },
+      });
+    } catch (e) {
+      console.warn("erro", e.message);
+    }
+    setOS(_.cloneDeep(emptyOS));
+    setIsLoading(false);
+    goToHomePage();
+  }
+
+  function checkIfFormIsValid() {
+    if (ordemDeServico.numeroOS.trim() === "") {
+      setAlert({
+        ...alert,
+        modal: true,
+        text: "O número da OS deve ser preenchido",
+      });
+      return false;
+    }
+
+    if (ordemDeServico.numeroDaConta.trim() === "") {
+      setAlert({
+        ...alert,
+        modal: true,
+        text: "O número da conta deve ser preenchido",
+      });
+      return false;
+    }
+
+    if (ordemDeServico.kilometragem.trim() === "") {
+      setAlert({
+        ...alert,
+        modal: true,
+        text: "A kilometragem percorrida deve ser informada",
+      });
+      return false;
+    }
+
+    return true;
+  }
+
   return (
     <>
       <TabBar onClickBack={() => goToHomePage()} />
@@ -414,8 +473,12 @@ export function FinalizarOSPage({ navigation }) {
           )}
         </View>
         <View>
-          <PrimaryButton size="md" mb={8}>
-            Finalizar OS
+          <PrimaryButton
+            size="md"
+            mb={8}
+            onPress={isLoading ? () => {} : () => submitOrdemDeServico()}
+          >
+            {isLoading ? "..." : "Finalizar OS"}
           </PrimaryButton>
 
           <SecondaryButton size="md" onPress={() => goToHomePage()}>
