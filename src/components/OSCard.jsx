@@ -5,38 +5,44 @@ import { TwoColumnTable } from "./TwoColumnTable";
 
 import Reapple from "react-native-material-ripple";
 
-export function OSCard() {
+export function OSCard({ OSData }) {
   return (
     <Reapple style={styles.mainContainer}>
       <View style={styles.headlines}>
         <View style={styles.headlinesInfo}>
-          <Text style={styles.OSText}>OS: 12345654</Text>
+          <Text style={styles.OSText}>OS: {OSData.numeroOS}</Text>
           <Text style={styles.separator}>|</Text>
-          <Text>Conta: 1234124234</Text>
+          <Text>Conta: {OSData.numeroDaConta}</Text>
         </View>
         <View style={styles.bullet}></View>
       </View>
       <View style={styles.status}>
         <Text style={styles.statusText}>Status: Encerrada</Text>
-        <Text style={styles.kilometragem}>Kilometragem: 12 Km</Text>
-      </View>
-      <View>
-        <Text style={styles.margin8}>
-          <Text style={styles.strong}>IRDS`s habilitados:</Text>{" "}
-          CE0A203687546590987D
-        </Text>
-        <Text style={styles.margin8}>
-          <Text style={styles.strong}>IRDS`s Retirados:</Text>{" "}
-          CE0A203687546590987D
-        </Text>
-        <Text style={styles.margin8}>
-          <Text style={styles.strong}>Observação: </Text> Serviço finalizado,
-          cliente satisfeito. equipamentos funcionando
+        <Text style={styles.kilometragem}>
+          Kilometragem: {OSData.kilometragem} Km
         </Text>
       </View>
       <View>
-        <Text>Materiais</Text>
-        <TwoColumnTable />
+        {OSData.IRDsHabilitados && (
+          <Text style={styles.margin8}>
+            <Text style={styles.strong}>IRDS`s habilitados:</Text>
+            {OSData.IRDsHabilitados.map((ird) => ird.name)}
+          </Text>
+        )}
+        {OSData.IRDsRetirados && (
+          <Text style={styles.margin8}>
+            <Text style={styles.strong}>IRDS`s habilitados:</Text>
+            {OSData.IRDsRetirados.map((ird) => ird.name)}
+          </Text>
+        )}
+        <Text style={styles.margin8}>
+          <Text style={styles.strong}>Observação: </Text>
+          {OSData.observacao}
+        </Text>
+      </View>
+      <View>
+        <Text style={{fontWeight: "bold"}}>Materiais</Text>
+        <TwoColumnTable data={OSData.materiais} keys={["name","amount"]} onPressRow={() => {}} />
       </View>
     </Reapple>
   );
@@ -48,7 +54,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F2F2F2",
     borderRadius: 8,
     marginTop: 16,
-    minHeight: 320
+    minHeight: 320,
   },
   headlines: {
     flexDirection: "row",
@@ -72,11 +78,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   statusText: {
-    fontSize: 12
+    fontSize: 12,
   },
   kilometragem: {
     marginLeft: 12,
-    fontSize: 12
+    fontSize: 12,
   },
   strong: {
     fontWeight: "bold",

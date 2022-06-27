@@ -31,7 +31,6 @@ export function TwoColumnTable({ data = [], keys = [], onPressRow }) {
             >
               <Text style={styles.data}>{data[keys[0]]}</Text>
               <Text style={styles.lastData}>{data[keys[1]]}</Text>
-              <Text style={styles.lastData}></Text>
             </Reapple>
           );
         })}
