@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
   },
   headlinesInfo: {
     flexDirection: "row",
+    alignItems: "center"
   },
   OSText: {
     fontSize: 18,
