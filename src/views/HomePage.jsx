@@ -13,7 +13,7 @@ export function HomePage({ navigation }) {
   const [OSList, setOSList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
 
-  const [filterOS, setFilterOS] = useState([]);
+  const [filterOS, setFilterOS] = useState("");
 
   useEffect(() => {
     const dataRef = ref(db, "ordensDeServico");
