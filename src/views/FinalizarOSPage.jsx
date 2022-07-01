@@ -127,7 +127,7 @@ export function FinalizarOSPage({ navigation }) {
   }
 
   function checkIfIRDCanBeAdd(ird, arrayIRD) {
-    const IRDAlreadyAdd = arrayIRD.filter((ird) => ird === ird)[0];
+    const IRDAlreadyAdd = arrayIRD.filter((nds) => nds === ird)[0];
     if (IRDAlreadyAdd) {
       setAlert({
         ...alert,
