@@ -8,6 +8,7 @@ import { HomeButton } from "../components/HomeButton";
 import { OSCard } from "../components/OSCard";
 
 import { db, ref, onValue } from "../plugins/firebase";
+import { getAllData } from "../services/database";
 
 export function HomePage({ navigation }) {
   const [OSList, setOSList] = useState([]);
@@ -16,11 +17,11 @@ export function HomePage({ navigation }) {
   const [filterOS, setFilterOS] = useState("");
 
   useEffect(() => {
-    const dataRef = ref(db, "ordensDeServico");
-    onValue(dataRef, (snapshot) => {
-      const dataArray = objectToArray(snapshot.val());
-      setOSList(dataArray);
+    onValue(ref(db, 'ordensDeServico'), (snapshot) => {
+      const arrayData = objectToArray(snapshot.val());
+      setOSList(arrayData)
     });
+    return () => { }
   }, []);
 
   useEffect(() => {
@@ -29,6 +30,7 @@ export function HomePage({ navigation }) {
     );
     setFilteredList(filterList);
   }, [filterOS]);
+
   function goTo({ page }) {
     navigation.navigate(page);
   }
@@ -41,8 +43,9 @@ export function HomePage({ navigation }) {
     return array;
   }
 
+
   return (
-    <ScrollView style={styles.main}>
+    <ScrollView style={styles.main} contentContainerStyle={styles.contentContainer}>
       <TextGradient text={"Bem-vindo ao Portal do Técnico"} />
       <View style={styles.buttonsContainer}>
         <HomeButton
@@ -73,11 +76,11 @@ export function HomePage({ navigation }) {
       </View>
       {filteredList.length > 0
         ? filteredList.map((OS, i) => {
-            return <OSCard OSData={OS} key={i} />;
-          })
+          return <OSCard OSData={OS} key={i} />;
+        })
         : OSList.map((OS, i) => {
-            return <OSCard OSData={OS} key={i} />;
-          })}
+          return <OSCard OSData={OS} key={i} />;
+        })}
     </ScrollView>
   );
 }
@@ -86,8 +89,10 @@ const styles = StyleSheet.create({
   main: {
     paddingRight: 16,
     paddingLeft: 16,
-    paddingBottom: 16,
     backgroundColor: "#fff",
+  },
+  contentContainer: {
+    paddingBottom: 16
   },
   buttonsContainer: {
     flexDirection: "row",

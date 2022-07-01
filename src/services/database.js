@@ -1,6 +1,5 @@
-import { db, set, ref, onValue } from "../plugins/firebase";
+import { db, set, ref, get, child } from "../plugins/firebase";
 import uuid from "react-native-uuid";
-import { get } from "lodash";
 
 export async function addDoc({ docName, docData }) {
   try {
@@ -13,14 +12,22 @@ export async function addDoc({ docName, docData }) {
   }
 }
 
-export async function getAllData({ dataName }) {
-  let data = [];
-  dbRef = ref(db);
-  const snapshot = await get(child(dbRef, dataName));
-  if(snapshot.exists()) {
-    data = snapshot.val()
-  }else {
-    console.warn("no data")
+export async function getAllData({ docName }) {
+  const dbRef = ref(db);
+  try {
+    const snapshot = await get(child(dbRef, docName));
+    if (snapshot.exists()) {
+      return objectToArray(snapshot.val());
+    }
+  } catch (e) {
+    return e;
   }
-  return data;
+}
+
+function objectToArray(object) {
+  const array = [];
+  for (let key in object) {
+    array.push({ id: key, ...object[key] });
+  }
+  return array;
 }
