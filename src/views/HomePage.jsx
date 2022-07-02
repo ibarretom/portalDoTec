@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { StyleSheet, Text, TextInput, View, ScrollView } from "react-native";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -8,7 +8,7 @@ import { HomeButton } from "../components/HomeButton";
 import { OSCard } from "../components/OSCard";
 
 import { db, ref, onValue } from "../plugins/firebase";
-import { getAllData } from "../services/database";
+import { useAuth } from "../hooks/useAuth";
 
 export function HomePage({ navigation }) {
   const [OSList, setOSList] = useState([]);
@@ -16,10 +16,13 @@ export function HomePage({ navigation }) {
 
   const [filterOS, setFilterOS] = useState("");
 
+  const { user } = useAuth()
+
   useEffect(() => {
     onValue(ref(db, 'ordensDeServico'), (snapshot) => {
       const arrayData = objectToArray(snapshot.val());
-      setOSList(arrayData)
+      const filterdData = arrayData.filter(os => (os.id_tec === user.uid) && (os.data_finalizacao === new Date(Date.now()).toLocaleDateString()))
+      setOSList(filterdData)
     });
     return () => { }
   }, []);
