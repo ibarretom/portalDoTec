@@ -28,7 +28,7 @@ const emptyOS = {
   IRDsRetirados: [],
   observacao: "",
   materiais: [],
-  data_finalizacao: new Date().toLocaleDateString(),
+  data_finalizacao: new Date().toLocaleDateString("pt-BR"),
 };
 
 export function FinalizarOSPage({ navigation }) {
@@ -253,10 +253,28 @@ export function FinalizarOSPage({ navigation }) {
     }
 
     try {
-      const response = await addDoc({
+      await addDoc({
         docName: "ordensDeServico",
         docData: { ..._.cloneDeep(ordemDeServico), id_tec: user.uid },
       });
+      ordemDeServico.IRDsHabilitados.forEach(async ird => {
+        await addDoc({
+          docName: "IRDs",
+          docData: {
+            ..._.cloneDeep(ird)
+          }
+        })
+      })
+
+      ordemDeServico.IRDsRetirados.forEach(async ird => {
+        await addDoc({
+          docName: "IRDs",
+          docData: {
+            ..._.cloneDeep(ird)
+          }
+        })
+      })
+
     } catch (e) {
       console.warn("erro", e.message);
     }
@@ -476,7 +494,7 @@ export function FinalizarOSPage({ navigation }) {
           <PrimaryButton
             size="md"
             mb={8}
-            onPress={isLoading ? () => {} : () => submitOrdemDeServico()}
+            onPress={isLoading ? () => { } : () => submitOrdemDeServico()}
           >
             {isLoading ? "..." : "Finalizar OS"}
           </PrimaryButton>
