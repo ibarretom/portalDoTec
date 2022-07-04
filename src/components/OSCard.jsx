@@ -26,13 +26,15 @@ export function OSCard({ OSData }) {
         {OSData.IRDsHabilitados && (
           <Text style={styles.margin8}>
             <Text style={styles.strong}>IRDS`s habilitados:</Text>
-            {OSData.IRDsHabilitados.map((ird) => ird.name)}
+            {OSData.IRDsHabilitados.map((ird, i, list) =>
+              (i + 1) === list.length ? ird.name : `${ird.name} |`
+            )}
           </Text>
         )}
         {OSData.IRDsRetirados && (
           <Text style={styles.margin8}>
             <Text style={styles.strong}>IRDS`s habilitados:</Text>
-            {OSData.IRDsRetirados.map((ird) => ird.name)}
+            {OSData.IRDsRetirados.map((ird, i, list) => (i + 1) === list.length ? ird.name : `${ird.name} |`)}
           </Text>
         )}
         <Text style={styles.margin8}>
@@ -41,8 +43,8 @@ export function OSCard({ OSData }) {
         </Text>
       </View>
       <View>
-        <Text style={{fontWeight: "bold"}}>Materiais</Text>
-        <TwoColumnTable data={OSData.materiais} keys={["name","amount"]} onPressRow={() => {}} />
+        <Text style={{ fontWeight: "bold" }}>Materiais</Text>
+        <TwoColumnTable data={OSData.materiais} keys={["name", "amount"]} onPressRow={() => { }} />
       </View>
     </Reapple>
   );
