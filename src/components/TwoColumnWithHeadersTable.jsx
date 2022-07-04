@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-export function TwoColumnWithHeadersTable({data}) {
+export function TwoColumnWithHeadersTable({ data = [], keys = [] }) {
   return (
     <View style={styles.table}>
       <View style={styles.header}>
@@ -13,18 +13,17 @@ export function TwoColumnWithHeadersTable({data}) {
         </View>
       </View>
       <View style={styles.body}>
-        <View style={styles.row}>
-          <Text style={styles.data}>Cabo coaxial F-59</Text>
-          <Text style={styles.lastData}>200 m</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.data}>Conector F-59</Text>
-          <Text style={styles.lastData}>2 un</Text>
-        </View>
-        <View style={styles.lastRow}>
-          <Text style={styles.data}>Chave 3x4</Text>
-          <Text style={styles.lastData}>2 un</Text>
-        </View>
+        {data && data.map((d, i, array) =>
+          i !== array.length ? <View style={styles.row} key={i}>
+            <Text style={styles.data} >{d[keys[0]]}</Text>
+            <Text style={styles.lastData}>{d[keys[1]]}</Text>
+          </View> :
+            <View style={styles.lastRow} key={i}>
+              <Text style={styles.data}>{d[keys[0]]}</Text>
+              <Text style={styles.lastData}>{d[keys[1]]}</Text>
+            </View>
+        )}
+
       </View>
     </View>
   );

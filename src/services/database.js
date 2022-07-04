@@ -24,6 +24,19 @@ export async function getAllData({ docName }) {
   }
 }
 
+export async function getOSsByTecAndDate({ id_tec, date }) {
+  try {
+    const rawData = await getAllData({ docName: "ordensDeServico" });
+    const OSs = rawData.filter(
+      (os) => os.id_tec === id_tec && os.data_finalizacao === date
+    );
+    return OSs;
+  } catch (e) {
+    console.warn(e);
+    return e;
+  }
+}
+
 function objectToArray(object) {
   const array = [];
   for (let key in object) {

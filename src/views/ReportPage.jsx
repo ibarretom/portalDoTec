@@ -1,15 +1,83 @@
-import React from "react";
-import { StyleSheet, Text, TextInput, ScrollView, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  ScrollView,
+} from "react-native";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
+
 
 import { TwoColumnWithHeadersTable } from "../components/TwoColumnWithHeadersTable";
 import { OneColumnTable } from "../components/OneColumnTable";
 import { TabBar } from "../components/TabBar";
+import { getOSsByTecAndDate } from "../services/database";
+import { useAuth } from "../hooks/useAuth";
+
+import _ from "lodash";
+import { AppDatePicker } from "../components/form/AppDatePicker";
 
 export function ReportPage({ navigation }) {
+  const { user } = useAuth();
+
+  const [material, setMaterial] = useState([]);
+  const [IRDsHabilitados, setIRDsHabilitados] = useState([]);
+  const [IRDsRetirados, setIRDsRetirados] = useState([]);
+
+  const [date, setDate] = useState(new Date().toLocaleDateString())
+
   function goToHomePage() {
     navigation.navigate("HomePage");
+  }
+
+  useEffect(() => {
+    getOSsByTecAndDate({
+      id_tec: user.uid,
+      date: date,
+    })
+      .then((r) => {
+        organizeMaterialAndIRDs(r);
+      })
+      .catch((e) => console.error(e));
+  }, [date]);
+
+  function organizeMaterialAndIRDs(data) {
+    const tempIRDsHabilitados = [];
+    const tempIRDsRetirados = [];
+    const tempMaterials = {};
+
+    for (let os = 0; os < data.length; os++) {
+      const OS = data[os];
+      OS.IRDsHabilitados &&
+        OS.IRDsHabilitados.forEach((ird) => tempIRDsHabilitados.push(ird));
+
+      OS.IRDsRetirados &&
+        OS.IRDsRetirados.forEach((ird) => tempIRDsRetirados.push(ird));
+
+      OS.materiais &&
+        OS.materiais.forEach((material) => {
+          if (!!tempMaterials[material.name]) {
+            tempMaterials[material.name].amount =
+              parseInt(material.amount) +
+              parseInt(tempMaterials[material.name].amount);
+          } else {
+            tempMaterials[material.name] = material;
+          }
+        });
+    }
+
+    setIRDsHabilitados(_.cloneDeep(tempIRDsHabilitados));
+    setIRDsRetirados(_.cloneDeep(tempIRDsRetirados));
+
+    setMaterial(objectToArray(tempMaterials));
+  }
+
+  function objectToArray(object) {
+    const array = [];
+    for (let key in object) {
+      array.push({ ...object[key] });
+    }
+    return array;
   }
   return (
     <>
@@ -17,25 +85,23 @@ export function ReportPage({ navigation }) {
       <ScrollView style={styles.main}>
         <Text style={styles.mainText}>Relatório de materiais</Text>
 
-        <View>
-          <TextInput style={styles.input} placeholder={"15/06/2022"} />
-          <Icon
-            style={styles.calendarIcon}
-            size={32}
-            name={"calendar-today"}
-            color="#999"
-          />
-        </View>
+        <AppDatePicker setDate={(date) => setDate(date)} />
 
-        <Text style={styles.secondaryText}>Utilizados</Text>
+        <TwoColumnWithHeadersTable data={material} keys={["name", "amount"]} />
 
-        <TwoColumnWithHeadersTable />
+        <OneColumnTable
+          title={"IRDs Habilitados"}
+          data={IRDsHabilitados}
+          keys={["name"]}
+          onPressRow={() => { }}
+        />
 
-        <OneColumnTable />
-
-        <Text style={styles.secondaryText}>Retirados</Text>
-
-        <OneColumnTable />
+        <OneColumnTable
+          title={"IRDs Retirados"}
+          data={IRDsRetirados}
+          keys={["name"]}
+          onPressRow={() => { }}
+        />
       </ScrollView>
     </>
   );
@@ -52,19 +118,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 16,
     marginBottom: 16,
-  },
-  input: {
-    height: 40,
-    backgroundColor: "white",
-    borderColor: "#D6D6D6",
-    borderRadius: 8,
-    borderWidth: 1,
-    padding: 10,
-  },
-  calendarIcon: {
-    position: "absolute",
-    right: 8,
-    top: 4,
   },
   secondaryText: {
     fontSize: 18,
