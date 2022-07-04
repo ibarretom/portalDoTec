@@ -10,6 +10,7 @@ import { FinalizarOSPage } from "../views/FinalizarOSPage";
 import { ReportPage } from "../views/ReportPage";
 
 import { useAuth } from "../hooks/useAuth";
+import { ListOS } from "../views/ListOS";
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +31,7 @@ export function Router() {
             <Stack.Screen name="HomePage" component={HomePage} />
             <Stack.Screen name="FinalizarOSPage" component={FinalizarOSPage} />
             <Stack.Screen name="ReportPage" component={ReportPage} />
+            <Stack.Screen name="ListOS" component={ListOS} />
           </>
         )}
       </Stack.Navigator>

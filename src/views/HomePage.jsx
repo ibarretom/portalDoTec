@@ -50,7 +50,7 @@ export function HomePage({ navigation }) {
   return (
     <ScrollView style={styles.main} contentContainerStyle={styles.contentContainer}>
       <TextGradient text={"Bem-vindo ao Portal do Técnico"} />
-      <View style={styles.buttonsContainer}>
+      <ScrollView horizontal>
         <HomeButton
           name={"Finalizar OS"}
           iconName={"description"}
@@ -61,7 +61,12 @@ export function HomePage({ navigation }) {
           iconName={"assignment"}
           onPress={() => goTo({ page: "ReportPage" })}
         />
-      </View>
+        <HomeButton
+          name={"OS's finalizadas"}
+          iconName={"list"}
+          onPress={() => goTo({ page: "ListOS" })}
+        />
+      </ScrollView>
       <Text style={styles.OSText}>OS's finalizadas</Text>
       <View>
         <TextInput
@@ -96,9 +101,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingBottom: 16
-  },
-  buttonsContainer: {
-    flexDirection: "row",
   },
   OSText: {
     fontSize: 20,
